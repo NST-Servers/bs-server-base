@@ -1,0 +1,34 @@
+# !/bin/bash
+# update our bombsquad server
+
+SOURCE_PATH="src/bombsquad/"
+
+chk_pkg() {
+    which $1 &>/dev/null || {
+        echo "Package '$1' not found. Install it via apt, snap, pacman..."
+        exit 1
+        }
+}
+# make sure we have the proper packages
+chk_pkg curl
+chk_pkg tar
+
+# alright, we can make our paths now that we're sure
+mkdir .tmp
+mkdir -p $SOURCE_PATH
+
+echo "Downloading latest 'BombSquad_Server_Linux_x86_64' release..."
+# download the latest bombsquad server linux x86-64 release
+CURLD=$(curl -s "https://ballistica.net/downloads")
+DL_URL=$(echo "$CURLD" | grep -oP 'https://[^"]+BombSquad_Server_Linux_x86_64[^"]+\.tar\.gz' | head -1)
+OUT_PATH=".tmp/bombsquad_server_linux.tar.gz"
+
+echo "fetching from \"$DL_URL\""
+# we download, unextract and move all
+# contents to the provided source path
+curl -L "$DL_URL" -o $OUT_PATH
+tar -xzf $OUT_PATH -C $SOURCE_PATH --strip-components=1
+chmod +x src/bombsquad/bombsquad_server
+
+# hooray! we've done our job, time to clean up!
+rm -rf .tmp

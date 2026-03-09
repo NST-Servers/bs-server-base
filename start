@@ -1,0 +1,4 @@
+# !/bin/bash
+# start our bombsquad server
+
+./src/bombsquad/bombsquad_server --root "data"
