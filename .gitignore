@@ -1,3 +1,9 @@
 .tmp
-src
-data
+
+src/bombsquad/*
+
+src/mods/*
+!src/mods/README.txt
+
+data/*
+!data/README.txt
