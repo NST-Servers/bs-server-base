@@ -1,4 +1,6 @@
-# !/bin/bash
+#!/bin/bash
 # start our bombsquad server
 
+cp -r src/mods data/mods
+rm -f data/mods/README.txt
 ./src/bombsquad/bombsquad_server --root "data"
