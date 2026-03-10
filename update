@@ -15,6 +15,7 @@ chk_pkg() {
 # make sure we have the proper packages
 chk_pkg curl
 chk_pkg tar
+chk_pkg git
 
 confirm_update() {
     echo "WARNING: This will replace your current server at \"$SOURCE_PATH\" with the latest release."
@@ -64,7 +65,7 @@ curl -L "$DL_URL" -o "$OUT_PATH" || {
 }
 
 # extract and nicely locate our archive at our source
-echo "Extracting archive at \"$SOURCE_PATH\"..."
+echo "Extracting archive at \"$OUT_PATH\" to \"$SOURCE_PATH\"..."
 tar -xzf "$OUT_PATH" -C "$SOURCE_PATH" --strip-components=1 || {
     echo
     echo "ERROR: failure on archive extraction."
@@ -80,6 +81,25 @@ tar -xzf "$OUT_PATH" -C "$SOURCE_PATH" --strip-components=1 || {
 }
 # finally, make the server file actually executable
 chmod +x "$SOURCE_PATH/bombsquad_server"
+
+# download fusecore too and apply it to our source server
+echo "Downloading latest 'BombSquad: FuseCore' release..."
+
+OUT_PATH="$TMP_DIR/dist"
+git clone "https://github.com/NST-Servers/fusecore/" "$OUT_PATH"
+cp -fr "$OUT_PATH" "$SOURCE_PATH"
+
+echo "Deleting irrelevant project files"
+rm -rf "$SOURCE_PATH/dist/.git/"
+rm -rf "$SOURCE_PATH/dist/.vscode/"
+rm -f "$SOURCE_PATH/dist/.gitignore"
+rm -f "$SOURCE_PATH/dist/.pylintrc"
+rm -f "$SOURCE_PATH/dist/black-formatting"
+rm -f "$SOURCE_PATH/dist/update"
+
+# patch bascenev1lib to load fusecore
+chmod +w "src/bombsquad/dist/ba_data/python/bascenev1lib/__init__.py"
+echo import fusecore >> "src/bombsquad/dist/ba_data/python/bascenev1lib/__init__.py"
 
 # hooray! we've done it!
 echo "Server update completed!"
