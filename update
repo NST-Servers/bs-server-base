@@ -86,8 +86,9 @@ tar -xzf "$OUT_PATH" -C "$SOURCE_PATH" --strip-components=1 || {
     echo
     exit 1
 }
-# finally, make the server file actually executable
-chmod +x "$SOURCE_PATH/bombsquad_server"
+# copy some files
+chmod +x "$SOURCE_PATH/bombsquad_server" "$SOURCE_PATH/dist/bombsquad_headless"
+cp -f "$SOURCE_PATH/config.toml" "."
 
 # download fusecore too and apply it to our source server
 echo "Downloading latest 'BombSquad: FuseCore' release..."

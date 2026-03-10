@@ -3,4 +3,4 @@
 
 cp -r src/mods data/mods
 rm -f data/mods/README.txt
-./src/bombsquad/bombsquad_server --root "data"
+./src/bombsquad/bombsquad_server --root "data" --config "./config.toml"

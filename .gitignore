@@ -1,9 +1,13 @@
 .tmp
 
+# bombsquad download
 src/bombsquad/*
+config.toml
 
+# untrack mods -readme
 src/mods/*
 !src/mods/README.txt
 
+# untrack server-generated data -readme
 data/*
 !data/README.txt
