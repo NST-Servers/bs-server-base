@@ -1,6 +1,26 @@
 #!/bin/bash
 # start our bombsquad server
 
-cp -r src/mods data/mods
-rm -f data/mods/README.txt
-./src/bombsquad/bombsquad_server --root "data" --config "./config.toml"
+set -e
+
+# default parameters
+[[ -z "$1" ]] && {
+    set -- "./data"
+    echo "Using default data dir path: \"$1\""
+}
+[[ -z "$2" ]] && {
+    set -- "$1" "./config.toml"
+    echo "Using default config path: \"$2\""
+}
+# copy our mods to our data folder
+mkdir -p "$1" || {
+    echo "Could not write to \"$1\"!"
+    echo "Make sure you provided a valid path you have perms to write on."
+    echo "Alternatively, try running this script as 'sudo'."
+    exit 1
+}
+cp -r "src/mods" "$1/mods"
+rm -f "$1/mods/README.txt"
+
+# run it!
+./src/bombsquad/bombsquad_server --root "$1" --config "$2"
